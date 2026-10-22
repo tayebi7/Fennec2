@@ -25,17 +25,26 @@ jobs:
       - name: Build APK
         run: java -jar /tmp/apktool.jar b . -o /tmp/unsigned.apk
 
+      - name: Build diagnostic variant (original dex)
+        run: |
+          mkdir -p /tmp/v2 && cp tools/original_classes.dex /tmp/v2/classes.dex
+          cp /tmp/unsigned.apk /tmp/unsigned_origdex.apk
+          (cd /tmp/v2 && zip -q /tmp/unsigned_origdex.apk classes.dex)
+
       - name: Align and sign
         run: |
           BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
-          "$BT/zipalign" -f -p 4 /tmp/unsigned.apk /tmp/aligned.apk
           keytool -genkeypair -keystore /tmp/ks.jks -storepass android -keypass android -alias key -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Fennec Player"
           mkdir -p out
-          "$BT/apksigner" sign --ks /tmp/ks.jks --ks-pass pass:android --key-pass pass:android --out out/FennecPlayer.apk /tmp/aligned.apk
+          for n in unsigned:FennecPlayer unsigned_origdex:FennecPlayer_origdex; do
+            src=${n%%:*}; dst=${n##*:}
+            "$BT/zipalign" -f -p 4 /tmp/$src.apk /tmp/$src.aligned.apk
+            "$BT/apksigner" sign --ks /tmp/ks.jks --ks-pass pass:android --key-pass pass:android --out out/$dst.apk /tmp/$src.aligned.apk
+          done
 
       - uses: actions/upload-artifact@v4
         with:
           name: FennecPlayer-apk
-          path: out/FennecPlayer.apk
+          path: out/*.apk
           if-no-files-found: error
           retention-days: 14

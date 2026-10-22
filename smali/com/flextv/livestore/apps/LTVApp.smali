@@ -117,7 +117,7 @@
 .end method
 
 .method public constructor <init>()V
-    .locals 1
+    .locals 2
 
     invoke-direct {p0}, Lz0/b;-><init>()V
 
@@ -138,6 +138,16 @@
     invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
 
     iput-object v0, p0, Lcom/flextv/livestore/apps/LTVApp;->m:Ljava/util/List;
+
+    invoke-static {}, Ljava/lang/Thread;->getDefaultUncaughtExceptionHandler()Ljava/lang/Thread$UncaughtExceptionHandler;
+
+    move-result-object v0
+
+    new-instance v1, Lcom/flextv/livestore/CrashHandler;
+
+    invoke-direct {v1, v0}, Lcom/flextv/livestore/CrashHandler;-><init>(Ljava/lang/Thread$UncaughtExceptionHandler;)V
+
+    invoke-static {v1}, Ljava/lang/Thread;->setDefaultUncaughtExceptionHandler(Ljava/lang/Thread$UncaughtExceptionHandler;)V
 
     return-void
 .end method
@@ -221,21 +231,11 @@
 .end method
 
 .method public final onCreate()V
-    .locals 2
+    .locals 0
 
     invoke-super {p0}, Landroid/app/Application;->onCreate()V
 
     sput-object p0, Lcom/flextv/livestore/apps/LTVApp;->n:Lcom/flextv/livestore/apps/LTVApp;
-
-    invoke-static {}, Ljava/lang/Thread;->getDefaultUncaughtExceptionHandler()Ljava/lang/Thread$UncaughtExceptionHandler;
-
-    move-result-object v0
-
-    new-instance v1, Lcom/flextv/livestore/CrashHandler;
-
-    invoke-direct {v1, p0, v0}, Lcom/flextv/livestore/CrashHandler;-><init>(Landroid/content/Context;Ljava/lang/Thread$UncaughtExceptionHandler;)V
-
-    invoke-static {v1}, Ljava/lang/Thread;->setDefaultUncaughtExceptionHandler(Ljava/lang/Thread$UncaughtExceptionHandler;)V
 
     return-void
 .end method

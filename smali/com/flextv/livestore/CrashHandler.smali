@@ -2,19 +2,17 @@
 .super Ljava/lang/Object;
 .implements Ljava/lang/Thread$UncaughtExceptionHandler;
 
-.field private final a:Landroid/content/Context;
 .field private final b:Ljava/lang/Thread$UncaughtExceptionHandler;
 
-.method public constructor <init>(Landroid/content/Context;Ljava/lang/Thread$UncaughtExceptionHandler;)V
+.method public constructor <init>(Ljava/lang/Thread$UncaughtExceptionHandler;)V
     .locals 0
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
-    iput-object p1, p0, Lcom/flextv/livestore/CrashHandler;->a:Landroid/content/Context;
-    iput-object p2, p0, Lcom/flextv/livestore/CrashHandler;->b:Ljava/lang/Thread$UncaughtExceptionHandler;
+    iput-object p1, p0, Lcom/flextv/livestore/CrashHandler;->b:Ljava/lang/Thread$UncaughtExceptionHandler;
     return-void
 .end method
 
 .method public uncaughtException(Ljava/lang/Thread;Ljava/lang/Throwable;)V
-    .locals 6
+    .locals 8
 
     :try_start_0
     new-instance v0, Ljava/io/StringWriter;
@@ -26,23 +24,37 @@
     move-result-object v0
     invoke-virtual {v0}, Ljava/lang/String;->length()I
     move-result v1
-    const/16 v2, 0xbb8
+    const/16 v2, 0x1388
     if-le v1, v2, :cond_0
     const/4 v1, 0x0
     invoke-virtual {v0, v1, v2}, Ljava/lang/String;->substring(II)Ljava/lang/String;
     move-result-object v0
     :cond_0
-    iget-object v1, p0, Lcom/flextv/livestore/CrashHandler;->a:Landroid/content/Context;
-    const-string v2, "clipboard"
-    invoke-virtual {v1, v2}, Landroid/content/Context;->getSystemService(Ljava/lang/String;)Ljava/lang/Object;
+    const-string v1, "android.app.ActivityThread"
+    invoke-static {v1}, Ljava/lang/Class;->forName(Ljava/lang/String;)Ljava/lang/Class;
     move-result-object v1
-    check-cast v1, Landroid/content/ClipboardManager;
-    const-string v2, "crash"
-    invoke-static {v2, v0}, Landroid/content/ClipData;->newPlainText(Ljava/lang/CharSequence;Ljava/lang/CharSequence;)Landroid/content/ClipData;
-    move-result-object v0
-    invoke-virtual {v1, v0}, Landroid/content/ClipboardManager;->setPrimaryClip(Landroid/content/ClipData;)V
-    const-wide/16 v0, 0x5dc
-    invoke-static {v0, v1}, Ljava/lang/Thread;->sleep(J)V
+    const-string v2, "currentApplication"
+    const/4 v3, 0x0
+    new-array v4, v3, [Ljava/lang/Class;
+    invoke-virtual {v1, v2, v4}, Ljava/lang/Class;->getMethod(Ljava/lang/String;[Ljava/lang/Class;)Ljava/lang/reflect/Method;
+    move-result-object v1
+    const/4 v2, 0x0
+    new-array v4, v3, [Ljava/lang/Object;
+    invoke-virtual {v1, v2, v4}, Ljava/lang/reflect/Method;->invoke(Ljava/lang/Object;[Ljava/lang/Object;)Ljava/lang/Object;
+    move-result-object v1
+    check-cast v1, Landroid/content/Context;
+
+    new-instance v2, Landroid/content/Intent;
+    const-class v3, Lcom/flextv/livestore/CrashActivity;
+    invoke-direct {v2, v1, v3}, Landroid/content/Intent;-><init>(Landroid/content/Context;Ljava/lang/Class;)V
+    const v3, 0x1000c000
+    invoke-virtual {v2, v3}, Landroid/content/Intent;->addFlags(I)Landroid/content/Intent;
+    const-string v3, "t"
+    invoke-virtual {v2, v3, v0}, Landroid/content/Intent;->putExtra(Ljava/lang/String;Ljava/lang/String;)Landroid/content/Intent;
+    invoke-virtual {v1, v2}, Landroid/content/Context;->startActivity(Landroid/content/Intent;)V
+
+    const-wide/16 v2, 0x9c4
+    invoke-static {v2, v3}, Ljava/lang/Thread;->sleep(J)V
     :try_end_0
     .catch Ljava/lang/Throwable; {:try_start_0 .. :try_end_0} :catch_0
 

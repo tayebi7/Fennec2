@@ -1,0 +1,38 @@
+version: 2.10.0
+apkFileName: base.apk
+isFrameworkApk: false
+usesFramework:
+  ids:
+  - 1
+  tag: null
+sdkInfo:
+  minSdkVersion: 21
+  targetSdkVersion: 34
+packageInfo:
+  forcedPackageId: 127
+  renameManifestPackage: null
+versionInfo:
+  versionCode: 52
+  versionName: 4.3
+resourcesAreCompressed: false
+sharedLibrary: false
+sparseResources: false
+unknownFiles:
+  play-services-tasks.properties: 8
+  DebugProbesKt.bin: 8
+  androidannotations-api.properties: 8
+  androidsupportmultidexversion.txt: 8
+  play-services-basement.properties: 8
+  play-services-base.properties: 8
+  kotlin-tooling-metadata.json: 8
+  play-services-cronet.properties: 8
+  okhttp3/internal/publicsuffix/NOTICE: 8
+  okhttp3/internal/publicsuffix/publicsuffixes.gz: 8
+doNotCompress:
+- resources.arsc
+- png
+- ogg
+- res/raw/keep_cronet_api.xml
+- gif
+- assets/dexopt/baseline.prof
+- assets/dexopt/baseline.profm

@@ -1,12 +1,9 @@
-
 name: Build Fennec Player APK
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - main
-      - master
+    branches: [main, master]
 
 permissions:
   contents: read
@@ -14,30 +11,31 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
-      - name: Set up Java 17
-        uses: actions/setup-java@v4
+      - uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: '17'
 
-      - name: Install Gradle 8.9
-        run: |
-          curl -L --fail --retry 3 https://services.gradle.org/distributions/gradle-8.9-bin.zip -o /tmp/gradle.zip
-          unzip -q /tmp/gradle.zip -d /tmp
-          echo "/tmp/gradle-8.9/bin" >> "$GITHUB_PATH"
+      - name: Download Apktool
+        run: curl -L --fail --retry 3 -o /tmp/apktool.jar https://github.com/iBotPeaches/Apktool/releases/download/v2.10.0/apktool_2.10.0.jar
 
       - name: Build APK
-        run: gradle --no-daemon :app:assembleDebug
+        run: java -jar /tmp/apktool.jar b . -o /tmp/unsigned.apk
 
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
+      - name: Align and sign
+        run: |
+          BT=$(ls -d "$ANDROID_HOME"/build-tools/* | sort -V | tail -1)
+          "$BT/zipalign" -f -p 4 /tmp/unsigned.apk /tmp/aligned.apk
+          keytool -genkeypair -keystore /tmp/ks.jks -storepass android -keypass android -alias key -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=Fennec Player"
+          mkdir -p out
+          "$BT/apksigner" sign --ks /tmp/ks.jks --ks-pass pass:android --key-pass pass:android --out out/FennecPlayer.apk /tmp/aligned.apk
+
+      - uses: actions/upload-artifact@v4
         with:
-          name: FennecPlayer-debug-apk
-          path: app/build/outputs/apk/debug/*.apk
+          name: FennecPlayer-apk
+          path: out/FennecPlayer.apk
           if-no-files-found: error
           retention-days: 14

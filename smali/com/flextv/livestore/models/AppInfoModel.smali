@@ -125,9 +125,19 @@
 
 # direct methods
 .method public constructor <init>()V
-    .locals 0
+    .locals 1
 
     invoke-direct {p0}, Ljava/lang/Object;-><init>()V
+
+    new-instance v0, Ljava/util/ArrayList;
+
+    invoke-direct {v0}, Ljava/util/ArrayList;-><init>()V
+
+    iput-object v0, p0, Lcom/flextv/livestore/models/AppInfoModel;->result:Ljava/util/List;
+
+    const-string v0, "2099-12-31"
+
+    iput-object v0, p0, Lcom/flextv/livestore/models/AppInfoModel;->expiredDate:Ljava/lang/String;
 
     return-void
 .end method

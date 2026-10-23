@@ -854,6 +854,12 @@
 .method public final W(Ljava/lang/String;)V
     .locals 14
 
+    invoke-virtual {p0}, Lcom/flextv/livestore/MainActivity;->X()V
+
+    return-void
+
+    :cond_unused_w
+
     invoke-static {}, Ljava/lang/System;->currentTimeMillis()J
 
     move-result-wide v0
@@ -1215,6 +1221,30 @@
 
     invoke-virtual {v1, v2}, Landroid/view/View;->setVisibility(I)V
 
+    iget-object v1, p0, Lcom/flextv/livestore/MainActivity;->X:Lcom/flextv/livestore/models/AppInfoModel;
+
+    if-nez v1, :cond_have
+
+    iget-object v1, p0, Lcom/flextv/livestore/MainActivity;->W:Lp2/b;
+
+    invoke-virtual {v1}, Lp2/b;->b()Lcom/flextv/livestore/models/AppInfoModel;
+
+    move-result-object v1
+
+    iput-object v1, p0, Lcom/flextv/livestore/MainActivity;->X:Lcom/flextv/livestore/models/AppInfoModel;
+
+    :cond_have
+    iget-object v1, p0, Lcom/flextv/livestore/MainActivity;->b0:Lcom/flextv/livestore/models/WordModels;
+
+    if-nez v1, :cond_have2
+
+    invoke-static {p0}, Lp2/a;->j(Landroid/content/Context;)Lcom/flextv/livestore/models/WordModels;
+
+    move-result-object v1
+
+    iput-object v1, p0, Lcom/flextv/livestore/MainActivity;->b0:Lcom/flextv/livestore/models/WordModels;
+
+    :cond_have2
     invoke-static {p0}, Lp2/a;->h(Landroid/content/Context;)I
 
     move-result v1

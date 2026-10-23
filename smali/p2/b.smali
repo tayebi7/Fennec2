@@ -2779,7 +2779,7 @@
 .method public final x()Ljava/lang/String;
     .locals 4
 
-    const/4 v0, 0x0
+    const-string v0, ""
 
     :try_start_0
     iget-object v1, p0, Lp2/b;->b:Landroid/content/SharedPreferences;

@@ -335,6 +335,11 @@
 
     move-result p0
 
+    if-nez v1, :cond_nn
+
+    return v2
+
+    :cond_nn
     .line 4
     invoke-virtual {v1}, Lcom/flextv/livestore/models/AppInfoModel;->getResult()Ljava/util/List;
 
